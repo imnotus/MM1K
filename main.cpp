@@ -109,13 +109,11 @@ int main() {
             length_avg = length_avg0 + (que.size() - length_avg0) / (double)(cnt - N / st + 1);
             length_avg0 = length_avg;
         }
-        //cout << wait_time_avg << " " << wait_time_sum / pop_cnt + service_time / 60.0 << endl;
-        cout << (wait_time_sum / pop_cnt + service_time / 60.0) / wait_time_avg << endl;
     }
     
     
     //出力
-    cout << "Test results" << endl;
+    cout << "Test results" << endl; //2種類の方法で平均値を計算(オーバーフロー対策)
     cout << "Length average = " << length_sum / (cnt - N / st) * rou << endl;
     cout << "Length average = " << length_avg * rou << endl;
     bool flag = false;
