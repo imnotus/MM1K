@@ -5,12 +5,12 @@ using ll = long long;
 
 //システム容量
 int K_MAX = 100;
-//ステップ数
-int N = 1000000;
-double lamda = 6.0;
-double service_time = 8.0;
-double myu = 60.0 / service_time;
-double rou = lamda / myu;
+// //ステップ数
+// int N = 1000000;
+// double lamda = 6.0;
+// double service_time = 8.0;
+// double myu = 60.0 / service_time;
+// double rou = lamda / myu;
 constexpr int FLOAT_MIN = 0;
 constexpr int FLOAT_MAX = 1;
 
@@ -32,14 +32,14 @@ double my_rand() {
 }
 
 //到着間隔
-double Arrival_interval() {
+double Arrival_interval(double lamda) {
     double g = my_rand();
     double tau = - log(1 - g) / lamda;
     return tau;
 }
 
 //サービス時間
-double Service_time() {
+double Service_time(double myu) {
     double g = my_rand();
     double psi = - log(1 - g) / myu;
     return psi;
@@ -48,12 +48,21 @@ double Service_time() {
 
 //メイン関数
 int main() {
+    //ステップ数
+    int N;
+    cout << "Input N:"; cin >> N;
+    double lamda = 6.0;
+    double service_time;
+    cout << "Input Service time:"; cin >> service_time;
+    cout << endl;
+    double myu = 60.0 / service_time;
+    double rou = lamda / myu;
     queue<double> que;
     double wait_time_avg = 0, wait_time_avg0 = 0;
     double length_avg = 0, length_avg0 = 0;
     double wait_time_sum = 0;
     double length_sum = 0;
-    double current_time = Arrival_interval();
+    double current_time = Arrival_interval(lamda);
     double arrived_time_sum = current_time;
     int cnt = 0, pop_cnt = 0, arv_cnt = 0, rjc_cnt = 0;
     double st = 3.0;  //初めの何分の１を切り捨てるか
@@ -64,7 +73,7 @@ int main() {
         cnt++;
         //先頭客のサービスが終了するまで客を到着させる
         if (arrived_time_sum < current_time) {
-            double tau = Arrival_interval();
+            double tau = Arrival_interval(lamda);
             arrived_time_sum += tau;
             arv_cnt++;  //到着した客をカウント
             //待ち行列長がシステム容量を超えていれば並ばせない
@@ -92,7 +101,7 @@ int main() {
                 pop_cnt++; //サービスを終えた客をカウント
             }
             if (!(que.empty())) que.pop();
-            current_time += Service_time();
+            current_time += Service_time(myu);
         }
         //行列長を加算
         if (cnt > N / st) {
